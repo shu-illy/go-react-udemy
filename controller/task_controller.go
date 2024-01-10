@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
@@ -42,7 +42,7 @@ func (tc *taskController) GetTaskByID(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	userID := claims["user_id"]
-	id := c.Param("taskId")
+	id := c.Param("taskID")
 	taskID, _ := strconv.Atoi(id)
 
 	taskRes, err := tc.tu.GetTaskByID(uint(userID.(float64)), uint(taskID))
@@ -73,7 +73,7 @@ func (tc *taskController) UpdateTask(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	userID := claims["user_id"]
-	id := c.Param("taskId")
+	id := c.Param("taskID")
 	taskID, _ := strconv.Atoi(id)
 
 	task := model.Task{}
@@ -91,7 +91,7 @@ func (tc *taskController) DeleteTask(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	userID := claims["user_id"]
-	id := c.Param("taskId")
+	id := c.Param("taskID")
 	taskID, _ := strconv.Atoi(id)
 
 	if err := tc.tu.DeleteTask(uint(userID.(float64)), uint(taskID)); err != nil {

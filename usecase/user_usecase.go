@@ -1,13 +1,12 @@
 package usecase
 
 import (
-	"fmt"
 	"go-react-udemy/model"
 	"go-react-udemy/repository"
 	"os"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -49,7 +48,6 @@ func (uu *userUsecase) Login(user model.User) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("hogeeeeeeeeee")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": storedUser.ID,
 		"exxp":    time.Now().Add(time.Hour * 12).Unix(),
