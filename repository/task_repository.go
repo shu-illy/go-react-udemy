@@ -10,7 +10,7 @@ import (
 
 type ITaskRepository interface {
 	GetAllTasks(tasks *[]model.Task, userID uint) error
-	GetTaskById(task *model.Task, userID uint, taskID uint) error
+	GetTaskByID(task *model.Task, userID uint, taskID uint) error
 	CreateTask(task *model.Task) error
 	UpdateTask(task *model.Task, userID uint, taskID uint) error
 	DeleteTask(userID uint, taskID uint) error
@@ -31,7 +31,7 @@ func (tr *taskRepository) GetAllTasks(tasks *[]model.Task, userID uint) error {
 	return nil
 }
 
-func (tr *taskRepository) GetTaskById(task *model.Task, userID uint, taskID uint) error {
+func (tr *taskRepository) GetTaskByID(task *model.Task, userID uint, taskID uint) error {
 	if err := tr.db.Joins("User").Where("user_id=?", userID, taskID).First(task, taskID).Error; err != nil {
 		return err
 	}
