@@ -3,6 +3,7 @@ package usecase
 import (
 	"go-react-udemy/model"
 	"go-react-udemy/repository"
+	"go-react-udemy/validator"
 )
 
 type ITaskUsecase interface {
@@ -15,10 +16,12 @@ type ITaskUsecase interface {
 
 type taskUsecase struct {
 	tr repository.ITaskRepository
+	tv validator.ITaskValidator
 }
 
-func NewTaskUsecase(tr repository.ITaskRepository) ITaskUsecase {
-	return &taskUsecase{tr}
+// NewTaskUsecase taskUsecaseを作成する
+func NewTaskUsecase(tr repository.ITaskRepository, tv validator.ITaskValidator) ITaskUsecase {
+	return &taskUsecase{tr, tv}
 }
 
 func (tu *taskUsecase) GetAllTasks(userID uint) ([]model.TaskResponse, error) {
@@ -54,6 +57,9 @@ func (tu *taskUsecase) GetTaskByID(userID uint, taskID uint) (model.TaskResponse
 }
 
 func (tu *taskUsecase) CreateTask(task model.Task) (model.TaskResponse, error) {
+	if err := tu.tv.TaskValidate(task); err != nil {
+		return model.TaskResponse{}, err
+	}
 	if err := tu.tr.CreateTask(&task); err != nil {
 		return model.TaskResponse{}, err
 	}
@@ -67,6 +73,9 @@ func (tu *taskUsecase) CreateTask(task model.Task) (model.TaskResponse, error) {
 }
 
 func (tu *taskUsecase) UpdateTask(task model.Task, userID uint, taskID uint) (model.TaskResponse, error) {
+	if err := tu.tv.TaskValidate(task); err != nil {
+		return model.TaskResponse{}, err
+	}
 	if err := tu.tr.UpdateTask(&task, userID, taskID); err != nil {
 		return model.TaskResponse{}, err
 	}
